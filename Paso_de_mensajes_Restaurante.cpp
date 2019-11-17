@@ -1,6 +1,6 @@
 #define TRUE 1
 #define FALSE 0
-int mesas_libres=M //* Tamaño del restaurante = M */
+int mesas_libres=M //* Tamaño del restaurante = M */ /* la escritura en esta variable es sección crítica */
 bool aviso_de_pago=false;
 mensaje men;
 
@@ -25,6 +25,7 @@ void proceso_cliente()						/* Proceso cliente */
 			aviso_de_pago = true;
 			pagar();
 			comer();
+			receive(buzón_comer,men);
 			mesas_libres= mesas_libres + 1;
 			send(buzón_comer,men);
 			salir();
