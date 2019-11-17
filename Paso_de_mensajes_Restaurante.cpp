@@ -1,7 +1,7 @@
 #define TRUE 1
 #define FALSE 0
-int mesas_libres=M //* Tamaño del restaurante = M */ /* la escritura en esta variable es sección crítica */
-bool aviso_de_pago=false;
+int mesas_libres=M				/* Tamaño del restaurante = M */	/* la escritura en esta variable es sección crítica */
+bool aviso_de_pago=false;		/* Variable del aviso */			/* la escritura en esta variable es sección crítica */
 mensaje men;
 
 void proceso_cliente()						/* Proceso cliente */
@@ -25,8 +25,8 @@ void proceso_cliente()						/* Proceso cliente */
 			receive(pagar,men);
 			receive(buzón_cobrar,men);
 			aviso_de_pago = true;
-			send(buzón_cobrar,men);
 			pagar();
+			send(buzón_cobrar,men);
 			send(pagar,men);
 			comer();
 			receive(buzón_comer,men);
@@ -58,9 +58,9 @@ void proceso_dependiente()					/* Proceso dependiente */
 void main()
 {
 	/* Creamos los buzones */
-	crear_buzón(buzón_comer);
-	crear_buzón(buzón_cobrar);
-	crar_buzón(pagar);
+	crear_buzón(buzón_comer);					/* Buzón asociado al uso de la variable mesas_libres */
+	crear_buzón(buzón_cobrar);					/* Buzón asociado al uso de la variable aviso_de_pago */
+	crear_buzón(pagar);							/* Sólo se puede pagar de 1 en 1, por lo que este buzón se utiliza para bloquear la función pagar() */
 	/* Inicializamos los buzones */
 	send(buzón_comer,men);
 	send(buzón_cobrar,men);
