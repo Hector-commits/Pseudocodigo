@@ -22,7 +22,9 @@ void proceso_cliente()						/* Proceso cliente */
 			mesas_libres= mesas_libres - 1;
 			send(buzón_comer,men);
 			coger_comida();
+			receive(buzón_cobrar,men);
 			aviso_de_pago = true;
+			send(buzón_cobrar,men);
 			pagar();
 			comer();
 			receive(buzón_comer,men);
@@ -36,14 +38,17 @@ void proceso_dependiente()					/* Proceso dependiente */
 {
 	while(true)
 	{
+		receive(buzón_cobrar,men);
 		if (aviso_de_pago==false)
 			{
+				send(buzón_cobrar,men);
 				reponer();
 			}
 		else	
 			{
 				cobrar();
 				aviso_de_pago=false;
+				send(buzón_cobrar,men)
 			}
 	}
 	
@@ -51,5 +56,6 @@ void proceso_dependiente()					/* Proceso dependiente */
 void main()
 {
 	crear_buzón(buzón_comer);
+	crear_buzón(buzón_cobrar);
 	ejecución_concurrente(proceso_cliente,proceso_dependiente);
 }
