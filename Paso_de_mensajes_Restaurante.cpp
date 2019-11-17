@@ -22,10 +22,12 @@ void proceso_cliente()						/* Proceso cliente */
 			mesas_libres= mesas_libres - 1;
 			send(buzón_comer,men);
 			coger_comida();
+			receive(pagar,men);
 			receive(buzón_cobrar,men);
 			aviso_de_pago = true;
 			send(buzón_cobrar,men);
 			pagar();
+			send(pagar,men);
 			comer();
 			receive(buzón_comer,men);
 			mesas_libres= mesas_libres + 1;
@@ -55,7 +57,14 @@ void proceso_dependiente()					/* Proceso dependiente */
 }
 void main()
 {
+	/* Creamos los buzones */
 	crear_buzón(buzón_comer);
 	crear_buzón(buzón_cobrar);
+	crar_buzón(pagar);
+	/* Inicializamos los buzones */
+	send(buzón_comer,men);
+	send(buzón_cobrar,men);
+	send(pagar,men);
+	/* Ejecutamos ambos procesos a la vez */
 	ejecución_concurrente(proceso_cliente,proceso_dependiente);
 }
