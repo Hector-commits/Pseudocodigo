@@ -8,20 +8,25 @@ void proceso_cliente()						/* Proceso cliente */
 {
 	while(true)								/* Los clientes vienen al restaurante sin parar */
 	{
+		buscar_mesa_libre();
+		receive(buzón_comer,men);
 		{
 		if (mesas_libres==0) 
 			{
 			salir();
+			send(buzón_comer,men);
 			}
 		else	
 		{
 			reservar();
 			mesas_libres= mesas_libres - 1;
+			send(buzón_comer,men);
 			coger_comida();
 			aviso_de_pago = true;
 			pagar();
 			comer();
 			mesas_libres= mesas_libres + 1;
+			send(buzón_comer,men);
 			salir();
 		}
 	}
@@ -44,5 +49,6 @@ void proceso_dependiente()					/* Proceso dependiente */
 }
 void main()
 {
+	crear_buzón(buzón_comer);
 	ejecución_concurrente(proceso_cliente,proceso_dependiente);
 }
